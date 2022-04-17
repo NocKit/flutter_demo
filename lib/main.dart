@@ -59,7 +59,14 @@ class _MyAppState extends State<MyApp> {
                 _flushButton(),
               ],
             ),
-            _createDataTable()
+            _createDataTable(),
+            ButtonBar(
+              alignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _pageUpButton(),
+                _pageDownButton()
+              ],
+            ),
           ],
         ),
       ),
@@ -74,6 +81,29 @@ class _MyAppState extends State<MyApp> {
         getHttp();
       },
       child: Text("刷新"),
+    );
+  }
+
+  _pageUpButton(){
+    return RaisedButton(
+      color: Colors.blue,
+      textColor: Colors.white,
+      onPressed: () {
+        page--;
+        getHttp();
+      },
+      child: Text("上一页"),
+    );
+  }
+  _pageDownButton(){
+    return RaisedButton(
+      color: Colors.blue,
+      textColor: Colors.white,
+      onPressed: () {
+        page++;
+        getHttp();
+      },
+      child: Text("下一页"),
     );
   }
 
