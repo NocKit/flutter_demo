@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:dio/dio.dart';
 
@@ -17,10 +18,7 @@ class _MyAppState extends State<MyApp> {
   List counter = [];
   var page = 1;
   var pageSize = 10;
-  var searchVal = {
-    'name': '',
-    'address': ''
-  };
+  var searchVal = {'name': '', 'address': ''};
 
   @override
   initState() {
@@ -30,10 +28,17 @@ class _MyAppState extends State<MyApp> {
 
   getHttp() async {
     try {
-      var response = await Dio().get('http://127.0.0.1:1080/list',
-          queryParameters: {'search': jsonEncode(searchVal),'page':page,'pageSize':pageSize});
+      var response = await Dio().get('http://168.235.92.201:1080/list',
+          queryParameters: {
+            'search': jsonEncode(searchVal),
+            'page': page,
+            'pageSize': pageSize
+          });
       print(response.data['data']['list']);
       counter = response.data['data']['list'];
+      setState(() {
+
+      });
     } catch (e) {
       print(e);
     }
@@ -47,9 +52,28 @@ class _MyAppState extends State<MyApp> {
           title: Text('DataTable Demo'),
         ),
         body: ListView(
-          children: [_createDataTable()],
+          children: [
+            ButtonBar(
+              alignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _flushButton(),
+              ],
+            ),
+            _createDataTable()
+          ],
         ),
       ),
+    );
+  }
+
+  _flushButton() {
+    return RaisedButton(
+      color: Colors.blue,
+      textColor: Colors.white,
+      onPressed: () {
+        getHttp();
+      },
+      child: Text("刷新"),
     );
   }
 
@@ -66,12 +90,46 @@ class _MyAppState extends State<MyApp> {
   }
 
   List<DataRow> _createRows() {
-    return counter
-        .map((book) => DataRow(cells: [
-              DataCell(Text(book['date'])),
-              DataCell(Text(book['name'])),
-              DataCell(Text(book['address']))
-            ]))
+    return
+      counter.map((item) => DataRow(
+              cells:[
+                DataCell(Text(item['date']),
+                  onTap: () {
+                    Fluttertoast.showToast(
+                        msg: item['date'],
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.black,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  },),
+                DataCell(Text(item['name']),
+                  onTap: () {
+                    Fluttertoast.showToast(
+                        msg: item['name'],
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.black45,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  },),
+                DataCell(
+                  Text(item['address']),
+                  onTap: () {
+                    Fluttertoast.showToast(
+                        msg: item['address'],
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.black45,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  },
+                )
+              ],
+            ))
         .toList();
   }
 }
