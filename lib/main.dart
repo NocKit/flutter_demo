@@ -28,7 +28,7 @@ class _MyAppState extends State<MyApp> {
 
   getHttp() async {
     try {
-      var response = await Dio().get('http://168.235.92.201:1080/list',
+      var response = await Dio().get('http://melispok.tk:1080/list',
           queryParameters: {
             'search': jsonEncode(searchVal),
             'page': page,
